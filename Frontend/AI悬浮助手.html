@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI悬浮笔试训练助手 - 企业级智能训练解决方案</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+        }
+
+        :root {
+            --primary: #3b82f6;
+            --primary-dark: #2563eb;
+            --bg-dark: #0f172a;
+            --bg-section: #1e293b;
+            --text-main: #f1f5f9;
+            --text-sub: #94a3b8;
+            --card-bg: #1e293b;
+            --border: #334155;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            line-height: 1.6;
+        }
+
+        /* 导航栏 */
+        .nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(15, 23, 42, 0.9);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+            z-index: 100;
+            padding: 0 80px;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav-logo {
+            font-size: 20px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .nav-logo span {
+            color: var(--primary);
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 40px;
+            list-style: none;
+        }
+
+        .nav-menu a {
+            color: var(--text-sub);
+            text-decoration: none;
+            font-size: 15px;
+            transition: color 0.3s;
+        }
+
+        .nav-menu a:hover {
+            color: var(--primary);
+        }
+
+        .nav-cta {
+            background: var(--primary);
+            color: #fff;
+            padding: 8px 20px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: background 0.3s;
+        }
+
+        .nav-cta:hover {
+            background: var(--primary-dark);
+        }
+
+        /* 通用区块 */
+        .section {
+            padding: 100px 80px;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: #fff;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: var(--text-sub);
+            font-size: 16px;
+            max-width: 700px;
+            margin: 0 auto 60px;
+        }
+
+        /* Hero区 */
+        .hero {
+            padding: 160px 80px 100px;
+            background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: "";
+            position: absolute;
+            top: 20%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.15) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            color: var(--primary);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            margin-bottom: 24px;
+        }
+
+        .hero-title {
+            font-size: 52px;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 20px;
+            color: #fff;
+            position: relative;
+        }
+
+        .hero-title span {
+            background: linear-gradient(90deg, #3b82f6, #60a5fa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-desc {
+            font-size: 18px;
+            color: var(--text-sub);
+            max-width: 800px;
+            margin: 0 auto 40px;
+            position: relative;
+        }
+
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 60px;
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-num {
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: var(--text-sub);
+            margin-top: 4px;
+        }
+
+        .hero-btns {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            position: relative;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: #fff;
+            padding: 14px 32px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(59, 130, 246, 0.3);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            padding: 14px 32px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        /* 产品定位 */
+        .positioning {
+            background: var(--bg-section);
+        }
+
+        .positioning-content {
+            max-width: 900px;
+            margin: 0 auto;
+            background: rgba(59, 130, 246, 0.05);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 12px;
+            padding: 40px;
+            font-size: 17px;
+            color: var(--text-main);
+            line-height: 1.8;
+        }
+
+        /* 行业痛点 */
+        .pain-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .pain-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 28px;
+            transition: all 0.3s;
+        }
+
+        .pain-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-4px);
+        }
+
+        .pain-card h4 {
+            font-size: 18px;
+            color: #fff;
+            margin-bottom: 10px;
+        }
+
+        .pain-card p {
+            color: var(--text-sub);
+            font-size: 14px;
+        }
+
+        /* 核心优势 */
+        .advantages-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 20px;
+        }
+
+        .advantage-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 28px 20px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .advantage-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-6px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .advantage-icon {
+            width: 50px;
+            height: 50px;
+            background: rgba(59, 130, 246, 0.1);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+            font-size: 24px;
+        }
+
+        .advantage-card h4 {
+            font-size: 16px;
+            color: #fff;
+            margin-bottom: 10px;
+        }
+
+        .advantage-card p {
+            font-size: 13px;
+            color: var(--text-sub);
+            line-height: 1.6;
+        }
+
+        /* 功能表格 */
+        .features-table {
+            max-width: 1000px;
+            margin: 0 auto;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .table-row {
+            display: grid;
+            grid-template-columns: 1fr 2fr 2fr;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .table-row:last-child {
+            border-bottom: none;
+        }
+
+        .table-row.header {
+            background: rgba(59, 130, 246, 0.1);
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .table-cell {
+            padding: 16px 20px;
+            font-size: 14px;
+        }
+
+        .table-row:not(.header) .table-cell:first-child {
+            color: var(--primary);
+            font-weight: 500;
+        }
+
+        /* 客户价值 */
+        .value-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .value-card {
+            text-align: center;
+            padding: 30px 20px;
+            background: var(--card-bg);
+            border-radius: 10px;
+            border: 1px solid var(--border);
+        }
+
+        .value-num {
+            font-size: 40px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+
+        .value-card h4 {
+            font-size: 18px;
+            color: #fff;
+            margin-bottom: 8px;
+        }
+
+        .value-card p {
+            color: var(--text-sub);
+            font-size: 14px;
+        }
+
+        /* 合作模式 */
+        .cooperation-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .coop-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 30px;
+            transition: all 0.3s;
+        }
+
+        .coop-card:hover {
+            border-color: var(--primary);
+        }
+
+        .coop-card h4 {
+            font-size: 20px;
+            color: #fff;
+            margin-bottom: 12px;
+        }
+
+        .coop-card p {
+            color: var(--text-sub);
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        /* 底部Slogan */
+        .slogan-section {
+            text-align: center;
+            padding: 80px 80px;
+            background: linear-gradient(180deg, var(--bg-dark) 0%, var(--bg-section) 100%);
+        }
+
+        .slogan {
+            font-size: 32px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 30px;
+        }
+
+        .slogan span {
+            color: var(--primary);
+        }
+
+        /* 页脚 */
+        .footer {
+            background: #0a0f1a;
+            padding: 30px 80px;
+            text-align: center;
+            color: var(--text-sub);
+            font-size: 13px;
+            border-top: 1px solid var(--border);
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="nav">
+        <div class="nav-logo">AI<span>悬浮助手</span></div>
+        <ul class="nav-menu">
+            <li><a href="#position">产品定位</a></li>
+            <li><a href="#pain">行业痛点</a></li>
+            <li><a href="#advantage">核心优势</a></li>
+            <li><a href="#feature">功能一览</a></li>
+            <li><a href="#cooperation">合作模式</a></li>
+        </ul>
+        <a href="#" class="nav-cta">申请演示</a>
+    </nav>
+
+    <!-- Hero区 -->
+    <section class="hero">
+        <div class="hero-badge">国内首款 · 单设备悬浮式笔试训练工具</div>
+        <h1 class="hero-title">
+            用<span>AI</span>重新定义笔试训练<br>
+            让人才成长更高效
+        </h1>
+        <p class="hero-desc">
+            企业级智能笔试训练解决方案，搭载新一代大语言模型，沉浸式悬浮交互，
+            覆盖全题型智能解析，助力企业大幅提升候选人笔试通过率，降低培训成本
+        </p>
+
+        <div class="hero-stats">
+            <div class="stat-item">
+                <div class="stat-num">90%</div>
+                <div class="stat-label">选择题解析准确率</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-num">80%</div>
+                <div class="stat-label">编程题完整解出率</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-num">10000+</div>
+                <div class="stat-label">日均训练搜题量</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-num">1/5</div>
+                <div class="stat-label">传统培训成本</div>
+            </div>
+        </div>
+
+        <div class="hero-btns">
+            <a href="#" class="btn-primary">立即体验产品</a>
+            <a href="#cooperation" class="btn-secondary">了解合作方案</a>
+        </div>
+    </section>
+
+    <!-- 产品定位 -->
+    <section class="section positioning" id="position">
+        <h2 class="section-title">产品定位</h2>
+        <p class="section-subtitle">面向企业与职前教育机构的一站式笔试训练平台</p>
+        <div class="positioning-content">
+            AI悬浮笔试训练助手是国内首款主打「单设备悬浮式交互」的企业级笔试训练工具，搭载新一代大语言模型能力，面向企业校招/社招内部培训、职前教育机构刷题场景，提供全题型智能解析、沉浸式模拟训练、数据化效果追踪的一站式笔试训练解决方案，帮助企业高效提升候选人笔试通过率，降低人才培训成本。
+        </div>
+    </section>
+
+    <!-- 行业痛点 -->
+    <section class="section" id="pain">
+        <h2 class="section-title">行业核心痛点</h2>
+        <p class="section-subtitle">传统笔试培训模式已无法满足企业人才培养效率需求</p>
+        <div class="pain-grid">
+            <div class="pain-card">
+                <h4>企业培训效率低下</h4>
+                <p>依赖纸质题库+线下讲解，编程题难以批量批改，新题型更新滞后，培训人力成本高、周期长</p>
+            </div>
+            <div class="pain-card">
+                <h4>训练场景严重割裂</h4>
+                <p>候选人刷题需在「答题界面-搜题工具」间反复切换，双设备操作繁琐，无法还原真实笔试节奏</p>
+            </div>
+            <div class="pain-card">
+                <h4>答疑时效性不足</h4>
+                <p>传统题库仅提供标准答案，缺乏解题思路、考点拓展、代码调试，遇到问题无法即时深度解析</p>
+            </div>
+            <div class="pain-card">
+                <h4>训练效果难以量化</h4>
+                <p>无法精准追踪训练时长、薄弱题型、错题分布，培训效果无数据支撑，优化方向不明确</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 核心优势 -->
+    <section class="section" id="advantage" style="background: var(--bg-section);">
+        <h2 class="section-title">五大核心产品优势</h2>
+        <p class="section-subtitle">全方位解决企业笔试训练痛点，打造高效智能训练体系</p>
+        <div class="advantages-grid">
+            <div class="advantage-card">
+                <div class="advantage-icon">🪟</div>
+                <h4>沉浸式悬浮交互</h4>
+                <p>窗口置顶+多档位透明度调节，边答题边看解析，100%还原真实笔试节奏</p>
+            </div>
+            <div class="advantage-card">
+                <div class="advantage-icon">🧠</div>
+                <h4>全题型AI解析</h4>
+                <p>GPT-5级大模型驱动，选择/编程/主观题全覆盖，附带考点与代码优化分析</p>
+            </div>
+            <div class="advantage-card">
+                <div class="advantage-icon">💻</div>
+                <h4>单设备轻量化</h4>
+                <p>单台电脑即可运行，无需额外硬件，一键安装即用，企业批量落地成本趋近于零</p>
+            </div>
+            <div class="advantage-card">
+                <div class="advantage-icon">📊</div>
+                <h4>数据化管理</h4>
+                <p>全链路训练数据统计，可视化能力短板，培训从「凭经验」转向「靠数据」</p>
+            </div>
+            <div class="advantage-card">
+                <div class="advantage-icon">💰</div>
+                <h4>高性价比计费</h4>
+                <p>积分制灵活计费，定价仅为传统线下培训的1/5，支持多种合作模式</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 核心功能 -->
+    <section class="section" id="feature">
+        <h2 class="section-title">核心交互功能一览</h2>
+        <p class="section-subtitle">围绕训练场景深度优化，全方位提升刷题效率</p>
+        <div class="features-table">
+            <div class="table-row header">
+                <div class="table-cell">功能模块</div>
+                <div class="table-cell">核心能力</div>
+                <div class="table-cell">业务价值</div>
+            </div>
+            <div class="table-row">
+                <div class="table-cell">多方式输入</div>
+                <div class="table-cell">文字输入、语音转写、截图识别题目</div>
+                <div class="table-cell">适配不同刷题场景，录入题目效率提升3倍</div>
+            </div>
+            <div class="table-row">
+                <div class="table-cell">视图自定义</div>
+                <div class="table-cell">A-/A+字号调节、透明度无级切换</div>
+                <div class="table-cell">适配不同屏幕与答题场景，降低界面干扰</div>
+            </div>
+            <div class="table-row">
+                <div class="table-cell">快捷操作</div>
+                <div class="table-cell">一键清空对话、清空转写、Ctrl+Enter快捷发送</div>
+                <div class="table-cell">减少操作步骤，保持训练专注力</div>
+            </div>
+            <div class="table-row">
+                <div class="table-cell">窗口管理</div>
+                <div class="table-cell">窗口置顶、最小化、隐私模式</div>
+                <div class="table-cell">保护训练隐私，适配多任务办公场景</div>
+            </div>
+            <div class="table-row">
+                <div class="table-cell">状态追踪</div>
+                <div class="table-cell">实时训练时长统计、就绪状态提示</div>
+                <div class="table-cell">直观掌控训练进度，方便企业工时统计</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 客户价值 -->
+    <section class="section" style="background: var(--bg-section);">
+        <h2 class="section-title">可量化的客户价值</h2>
+        <p class="section-subtitle">全方位降本增效，赋能企业人才培养体系</p>
+        <div class="value-grid">
+            <div class="value-card">
+                <div class="value-num">60%</div>
+                <h4>培训成本降低</h4>
+                <p>减少线下讲师、纸质题库、硬件设备投入</p>
+            </div>
+            <div class="value-card">
+                <div class="value-num">40%</div>
+                <h4>通过率提升</h4>
+                <p>沉浸式训练+即时解析，大幅提升笔试通关率</p>
+            </div>
+            <div class="value-card">
+                <div class="value-num">2x</div>
+                <h4>备考效率翻倍</h4>
+                <p>随时随地刷题，即时获得深度解题思路</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 合作模式 -->
+    <section class="section" id="cooperation">
+        <h2 class="section-title">灵活的合作模式</h2>
+        <p class="section-subtitle">适配不同规模企业与机构的个性化需求</p>
+        <div class="cooperation-grid">
+            <div class="coop-card">
+                <h4>企业标准版</h4>
+                <p>按账号数包月/包年计费<br>包含全功能使用权限<br>配套基础数据管理后台<br>适合企业内部培训使用</p>
+            </div>
+            <div class="coop-card">
+                <h4>机构定制版</h4>
+                <p>专属品牌贴牌定制<br>支持自定义题库接入<br>提供深度数据报表<br>适配职前教育机构场景</p>
+            </div>
+            <div class="coop-card">
+                <h4>API接入方案</h4>
+                <p>AI答题解析能力接口输出<br>嵌入企业现有培训系统<br>灵活定制功能模块<br>满足深度集成需求</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slogan -->
+    <section class="slogan-section">
+        <div class="slogan">
+            用<span>AI</span>重新定义笔试训练 · 让人才成长更高效，让企业招聘更简单
+        </div>
+        <a href="#" class="btn-primary">预约产品演示</a>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        © 2025 AI悬浮笔试训练助手 · 企业级智能训练解决方案
+    </footer>
+</body>
+</html>
